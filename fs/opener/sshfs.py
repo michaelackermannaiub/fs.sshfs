@@ -47,6 +47,7 @@ class SSHOpener(Opener):
             config_path=\
                 params.get('sshfs', 'config_path', fallback='~/.ssh/config'),
             exec_timeout=params.getint('sshfs', 'timeout', fallback=None),
+            look_for_keys=params.getboolean('sshfs', 'look-for-keys', fallback=None),
         )
 
         try:

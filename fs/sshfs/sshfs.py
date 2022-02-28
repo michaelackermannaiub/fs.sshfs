@@ -104,6 +104,7 @@ class SSHFS(FS):
             config_path='~/.ssh/config',
             exec_timeout=None,
             policy=None,
+            look_for_keys=None,
             **kwargs
     ):  # noqa: D102
         super(SSHFS, self).__init__()
@@ -124,6 +125,9 @@ class SSHFS(FS):
 
         _policy = paramiko.AutoAddPolicy() if policy is None else policy
 
+        if look_for_keys is None:
+            look_for_keys = True if (pkey and keyfile) is None else False
+
         try:
             # TODO: add more options
             client.load_system_host_keys()
@@ -131,7 +135,7 @@ class SSHFS(FS):
             argdict = {
                 "pkey": pkey,
                 "key_filename": keyfile,
-                "look_for_keys": True if (pkey and keyfile) is None else False,
+                "look_for_keys": look_for_keys,
                 "compress": compress,
                 "timeout": timeout
             }

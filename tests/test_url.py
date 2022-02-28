@@ -32,3 +32,17 @@ class TestFSURL(unittest.TestCase):
             self.assertEqual(magic.call_args[-1]['compress'], True)
             fs.open_fs('ssh://user:pass@localhost:2224/?timeout=5&compress=0')
             self.assertEqual(magic.call_args[-1]['compress'], False)
+
+    def test_look_for_keys(self):
+        with utils.mock.patch('fs.sshfs.SSHFS', utils.mock.MagicMock()) as magic:
+            fs.open_fs('ssh://user:pass@localhost:2224/')
+            self.assertEqual(magic.call_args[-1]['look_for_keys'], True)
+            fs.open_fs('ssh://user:pass@localhost:2224/?look-for-keys=true')
+            self.assertEqual(magic.call_args[-1]['look_for_keys'], True)
+            fs.open_fs('ssh://user:pass@localhost:2224/?look-for-keys=false')
+            self.assertEqual(magic.call_args[-1]['look_for_keys'], False)
+            fs.open_fs('ssh://user:pass@localhost:2224/?timeout=5&look-for-keys=1')
+            self.assertEqual(magic.call_args[-1]['look_for_keys'], True)
+            fs.open_fs('ssh://user:pass@localhost:2224/?timeout=5&look-for-keys=0')
+            self.assertEqual(magic.call_args[-1]['look_for_keys'], False)
+
